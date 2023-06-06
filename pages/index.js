@@ -31,6 +31,7 @@ export default function Home({
       <div className={styles.main}>
         <NavBar userName="mohammad@muslim.com" />
         <Banner
+          videoId="ctlz0R1tSZE"
           title="Stranger Things"
           subtitle="Look for Will"
           imgUrl="/static/stranger.png"
