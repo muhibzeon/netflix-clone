@@ -2,25 +2,66 @@ import { useRouter } from "next/router";
 import Modal from "react-modal";
 import styles from "../../styles/Video.module.css";
 import clsx from "classnames";
+import { getYoutubeVideoById } from "../../lib/videos";
+import NavBar from "../../components/nav/navbar";
 
 Modal.setAppElement("#__next");
 
-const Video = () => {
+export async function getStaticProps(context) {
+  // const video = {
+  //   title: "Some came running",
+  //   publishTime: "1963-05-03",
+  //   description: "Dino and Frankie becomes bestie to support each other",
+  //   channelTitle: "HBO Max",
+  //   viewCount: 23000,
+  // };
+
+  const videoId = context.params.videoId;
+  const videoArray = await getYoutubeVideoById(videoId);
+
+  return {
+    props: {
+      video: videoArray.length > 0 ? videoArray[0] : {},
+    },
+    // Next.js will attempt to re-generate the page:
+    // - When a request comes in
+    // - At most once every 10 seconds
+    revalidate: 10, // In seconds
+  };
+}
+
+export async function getStaticPaths() {
+  const listOfVideos = [
+    "DotnJ7tTA34",
+    "IiMinixSXII",
+    "bspbQZk7Yrs",
+    "6RQ4C9FrMEQ",
+  ];
+  const paths = listOfVideos.map((videoId) => ({
+    params: { videoId },
+  }));
+
+  // We'll pre-render only these paths at build time.
+  // { fallback: 'blocking' } will server-render pages
+  // on-demand if the path doesn't exist.
+  return { paths, fallback: "blocking" };
+}
+
+const Video = ({ video }) => {
   const router = useRouter();
   console.log({ router });
 
-  const video = {
-    title: "Some came running",
-    publishTime: "1963-05-03",
-    description: "Dino and Frankie becomes bestie to support each other",
-    channelTitle: "HBO Max",
-    viewCount: 23000,
-  };
-
-  const { title, publishTime, description, channelTitle, viewCount } = video;
+  const {
+    title,
+    publishTime,
+    description,
+    channelTitle,
+    statistics: { viewCount } = { viewCount: 0 },
+  } = video;
 
   return (
     <div className={styles.container}>
+      <NavBar />
       <Modal
         isOpen={true}
         contentLabel="Example Modal"
