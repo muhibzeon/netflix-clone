@@ -1,6 +1,7 @@
-import { isNewUser } from "../../lib/db/hasura";
+import { isNewUser, createNewUser } from "../../lib/db/hasura";
 import { magicAdmin } from "../../lib/magic";
 import Jwt from "jsonwebtoken";
+import { setTokenCookie } from "../../lib/cookies";
 
 export default async function login(req, res) {
   if (req.method === "POST") {
@@ -25,13 +26,15 @@ export default async function login(req, res) {
             "x-hasura-user-id": `${metadata.issuer}`,
           },
         },
-        "thisisasecretfrommagdeburgandaanewthesisofanewday1234"
+        process.env.JWT_SECRET
       );
 
-      console.log({ token });
+      const isNewUserQuery = await isNewUser(token, metadata.issuer);
+      isNewUserQuery && (await createNewUser(token, metadata));
 
-      const isNewUserQuery = await isNewUser(token);
-      res.send({ done: true, isNewUserQuery });
+      setTokenCookie(token, res);
+
+      res.send({ done: true });
     } catch (error) {
       console.log("Something went wrong logging in!", error);
       res.status(500).send({ doneInCatch: false });
