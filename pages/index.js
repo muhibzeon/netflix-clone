@@ -23,12 +23,14 @@ export async function getServerSideProps(context) {
     };
   }
   const watchItAgainVideos = await getWatchItAgainVideos(userId, token);
-  const disneyVideos = await getVideos("movie trailer");
+  const movie = await getVideos("movie trailer");
+  const disneyVideos = await getVideos("disney");
   const travelVideos = await getVideos("travel vlogs");
   const productivityVideos = await getVideos("motivation");
   const popularVideos = await getPopularVideos();
   return {
     props: {
+      movie,
       disneyVideos,
       travelVideos,
       productivityVideos,
@@ -39,6 +41,7 @@ export async function getServerSideProps(context) {
 }
 
 export default function Home({
+  movie,
   disneyVideos,
   travelVideos,
   productivityVideos,
@@ -55,13 +58,14 @@ export default function Home({
       <div className={styles.main}>
         <NavBar userName="mohammad@muslim.com" />
         <Banner
-          videoId="ctlz0R1tSZE"
-          title="Stranger Things"
-          subtitle="Look for Will"
-          imgUrl="/static/stranger.png"
+          videoId="uYPbbksJxIg"
+          title="O P P E N H E I M E R"
+          subtitle="New Trailer"
+          imgUrl="/static/oppenheimer.jpg"
         />
 
         <div className={styles.sectionWrapper}>
+          <SectionCards title="Upcoming Movies" videos={movie} size="small" />
           <SectionCards title="Disney" videos={disneyVideos} size="large" />
           <SectionCards
             title="Watch it Again"

@@ -5,7 +5,6 @@ import Image from "next/image";
 const Banner = (props) => {
   const { title, subtitle, imgUrl, videoId } = props;
   const router = useRouter();
-
   const handleOnPlay = () => {
     router.push(`/video/${videoId}`);
   };
