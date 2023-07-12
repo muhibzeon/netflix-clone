@@ -9,12 +9,9 @@ export default async function login(req, res) {
       const auth = req.headers.authorization;
 
       const didToken = auth ? auth.substr(7) : "";
-      //console.log(didToken);
 
       //get the metadata did, issuer and email from magic server side api
       const metadata = await magicAdmin.users.getMetadataByToken(didToken);
-      console.log({ metadata });
-
       const token = Jwt.sign(
         {
           ...metadata,

@@ -43,7 +43,6 @@ const Login = () => {
       try {
         setIsLoading(true);
         const didToken = await magic.auth.loginWithEmailOTP({ email: email });
-        console.log({ didToken });
         if (didToken) {
           const response = await fetch("/api/login", {
             method: "POST",
@@ -55,7 +54,6 @@ const Login = () => {
 
           const loggedInResponse = await response.json();
           if (loggedInResponse.done) {
-            console.log({ loggedInResponse });
             router.push("/");
           } else {
             setIsLoading(false);
