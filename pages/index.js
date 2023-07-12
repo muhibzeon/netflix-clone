@@ -8,10 +8,10 @@ import {
   getPopularVideos,
   getWatchItAgainVideos,
 } from "../lib/videos";
-import useRedirectUser from "../utils/redirectUser";
+import UseRedirectUser from "../utils/redirectUser";
 
 export async function getServerSideProps(context) {
-  const { token, userId } = await useRedirectUser(context);
+  const { token, userId } = await UseRedirectUser(context);
 
   if (!userId) {
     return {
