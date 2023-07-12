@@ -8,11 +8,10 @@ import {
   getPopularVideos,
   getWatchItAgainVideos,
 } from "../lib/videos";
-import { verifyToken } from "../lib/utils";
+import useRedirectUser from "../utils/redirectUser";
 
 export async function getServerSideProps(context) {
-  const token = context.req ? context.req?.cookies.token : null;
-  const userId = await verifyToken(token);
+  const { token, userId } = await useRedirectUser(context);
 
   if (!userId) {
     return {
@@ -23,9 +22,7 @@ export async function getServerSideProps(context) {
       },
     };
   }
-
   const watchItAgainVideos = await getWatchItAgainVideos(userId, token);
-
   const disneyVideos = await getVideos("movie trailer");
   const travelVideos = await getVideos("travel vlogs");
   const productivityVideos = await getVideos("motivation");
